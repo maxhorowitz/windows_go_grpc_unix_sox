@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package reverse;
+
+option go_package = "/";
+
+service ReverseService {
+  // Unary RPC to get the reversed string
+  rpc GetReverse (GetReverseRequest) returns (GetReverseResponse);
+}
+
+message GetReverseRequest {
+  string original = 1; // The original string to reverse
+}
+
+message GetReverseResponse {
+  string result = 1; // The reversed string
+}
