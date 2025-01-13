@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	pb "pb" // Replace with your actual protobuf package
+	pb "github.com/maxhorowitz/windows_go_grpc_unix_sox/pb" // Replace with your actual protobuf package
 
 	"google.golang.org/grpc"
 )
@@ -27,13 +27,13 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := pb.NewYourServiceClient(conn) // Replace with your actual service name
+	client := pb.NewReverseServiceClient(conn) // Replace with your actual service name
 
 	// Example request
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	resp, err := client.YourMethodName(ctx, &pb.YourRequest{}) // Replace with your actual method and request
+	resp, err := client.GetReverse(ctx, &pb.GetReverseRequest{Original: ""}) // Replace with your actual method and request
 	if err != nil {
 		log.Fatalf("Error calling YourMethodName: %v", err)
 	}

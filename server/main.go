@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -16,11 +17,11 @@ const socketPath = "/tmp/grpc_unix_socket"
 
 // Define your gRPC server
 type server struct {
+	pb.UnimplementedReverseServiceServer
 }
 
-func (s *server) YourMethodName(req *pb.YourRequest, stream pb.YourService_YourMethodNameServer) error {
-	// Implement your logic here
-	return nil
+func (s *server) GetReverse(ctx context.Context, req *pb.GetReverseRequest) (*pb.GetReverseResponse, error) {
+	return nil, nil
 }
 
 func main() {
@@ -37,6 +38,7 @@ func main() {
 	defer os.Remove(socketPath)
 
 	grpcServer := grpc.NewServer()
+	pb.RegisterReverseServiceServer(grpcServer, &server{})
 
 	fmt.Printf("gRPC server listening on %s\n", socketPath)
 	if err := grpcServer.Serve(listener); err != nil {
