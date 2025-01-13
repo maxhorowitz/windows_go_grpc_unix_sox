@@ -24,6 +24,18 @@ Before running this project, ensure the following requirements are met:
    cd windows_go_grpc_unix_sox
    ```
 
+## Modifying gRPC service
+
+1. Install dependencies:
+   ```bash
+   chmod +x install_deps.sh && ./install_deps.sh
+   ```
+
+2. Generate protocol buffer code in Go:
+   ```bash
+   chmod +x gen.sh && ./gen.sh
+   ```
+
 ## Testing go-grpc over unix
 
 1. Start the gRPC server
