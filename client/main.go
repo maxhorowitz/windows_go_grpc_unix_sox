@@ -5,6 +5,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"os"
 	"time"
 
 	pb "github.com/maxhorowitz/windows_go_grpc_unix_sox/pb" // Replace with your actual protobuf package
@@ -27,15 +28,20 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := pb.NewReverseServiceClient(conn) // Replace with your actual service name
+	client := pb.NewReverseServiceClient(conn)
 
 	// Example request
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	resp, err := client.GetReverse(ctx, &pb.GetReverseRequest{Original: ""}) // Replace with your actual method and request
+	if len(os.Args) != 2 {
+		log.Fatalf("Must provide string to be reversed!")
+		return
+	}
+
+	resp, err := client.GetReverse(ctx, &pb.GetReverseRequest{Original: os.Args[1]})
 	if err != nil {
-		log.Fatalf("Error calling YourMethodName: %v", err)
+		log.Fatalf("Error calling GetReverse: %v", err)
 	}
 	log.Printf("Response from server: %v", resp)
 }
