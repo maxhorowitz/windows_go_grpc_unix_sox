@@ -21,7 +21,17 @@ type server struct {
 }
 
 func (s *server) GetReverse(ctx context.Context, req *pb.GetReverseRequest) (*pb.GetReverseResponse, error) {
-	return nil, nil
+	original := req.GetOriginal()
+	if original == "" {
+		return &pb.GetReverseResponse{Result: ""}, nil
+	}
+	runes := []rune(original) // Convert string to rune slice to handle Unicode characters
+	n := len(runes)
+	for i := 0; i < n/2; i++ {
+		// Swap runes
+		runes[i], runes[n-i-1] = runes[n-i-1], runes[i]
+	}
+	return &pb.GetReverseResponse{Result: string(runes)}, nil // Convert rune slice back to string}
 }
 
 func main() {
