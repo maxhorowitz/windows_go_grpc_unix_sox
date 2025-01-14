@@ -7,13 +7,16 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
 	pb "github.com/maxhorowitz/windows_go_grpc_unix_sox/pb" // Replace with your actual protobuf package
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
-const socketPath = "/tmp/grpc_unix_socket"
+const socketPath = "/tmp/grpc.sock"
 
 // Define your gRPC server
 type server struct {
@@ -45,10 +48,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to listen on Unix socket: %v", err)
 	}
-	defer os.Remove(socketPath)
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		os.Remove(socketPath)
+		os.Exit(1)
+	}()
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterReverseServiceServer(grpcServer, &server{})
+	reflection.Register(grpcServer)
 
 	fmt.Printf("gRPC server listening on %s\n", socketPath)
 	if err := grpcServer.Serve(listener); err != nil {

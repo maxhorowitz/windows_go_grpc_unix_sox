@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-const socketPath = "/tmp/grpc_unix_socket"
+const socketPath = "/tmp/grpc.sock"
 
 func main() {
 	conn, err := grpc.Dial(
