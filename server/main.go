@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const socketPath = "/tmp/grpc.sock"
+const socketPath = "/grpc.sock"
 
 // Define your gRPC server
 type server struct {
@@ -47,6 +47,12 @@ func main() {
 	listener, err := net.Listen("unix", socketPath)
 	if err != nil {
 		log.Fatalf("Failed to listen on Unix socket: %v", err)
+	}
+	defer listener.Close()
+
+	// Set socket file permissions (e.g., rw for owner, r for group/others)
+	if err := os.Chmod(socketPath, 0777); err != nil {
+		log.Fatalf("Failed to set permissions on socket file: %v", err)
 	}
 
 	c := make(chan os.Signal, 1)

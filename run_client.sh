@@ -15,3 +15,6 @@ ARG=$1
 # Run the Go client with the argument
 echo "Starting the gRPC client with argument: $ARG"
 go run client/main.go "$ARG"
+
+read -p "Press Enter to exit..."
+
